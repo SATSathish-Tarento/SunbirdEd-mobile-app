@@ -54,7 +54,7 @@ export class OtpComponent implements OnInit {
     debugger
     if (this.commonUtilService.networkInfo.isNetworkAvailable) {
       let req: VerifyOtpRequest;
-      if (this.userData.emailPassInfo.type === ProfileConstants.CONTACT_TYPE_PHONE) {
+      if (this.userData.emailPassInfo.contactType === ProfileConstants.CONTACT_TYPE_PHONE) {
         req = {
           key: this.userData.emailPassInfo.phone,
           type: ProfileConstants.CONTACT_TYPE_PHONE,

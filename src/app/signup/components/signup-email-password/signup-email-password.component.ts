@@ -49,6 +49,11 @@ export class SignUpEmailPasswordComponent implements OnInit {
       validations: [{
         type: FieldConfigValidationType.REQUIRED,
         value: null,
+        message: 'Please enter password'
+      },
+      {
+        type: FieldConfigValidationType.PATTERN,
+        value: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[~.,)(}{\\[!"#$%&\'()*+,-./:;<=>?@[^_`{|}~\\]])(?=\\S+$).{8,}',
         message: 'Your password must contain a minimum of 8 characters. It must include numerals, lower and upper case alphabets and special characters, without any spaces.'
       }]
     },
@@ -114,7 +119,12 @@ export class SignUpEmailPasswordComponent implements OnInit {
           type: FieldConfigValidationType.REQUIRED,
           value: null,
           message: 'Please enter email address'
-        }]
+        },
+        {
+          type: FieldConfigValidationType.PATTERN,
+          value: /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/,
+          message: 'Please enter valid email address'
+        },]
       }];
       this.emailPasswordConfig = this.emailConfig.concat(this.passwordConfig);
     } else if (this.contactType === 'phone') {
@@ -125,67 +135,14 @@ export class SignUpEmailPasswordComponent implements OnInit {
     this.triggerPrev.emit();
   }
   continue() {
-    console.log(this.emailPasswordConfig);
     this.userData.contactType = this.contactType
     this.subformInitialized.emit(this.userData);
     this.triggerNext.emit();
   }
-  // async continue() {
-  //   debugger
-  //   if (this.commonUtilService.networkInfo.isNetworkAvailable) {
-  //     this.loader = await this.commonUtilService.getLoader();
-  //     await this.loader.present();
-  //     let req: IsProfileAlreadyInUseRequest;
-  //     if (this.contactType === ProfileConstants.CONTACT_TYPE_PHONE) {
-  //       req = {
-  //         key: this.userData.contactInfo.phone,
-  //         type: ProfileConstants.CONTACT_TYPE_PHONE
-  //       };
-  //     } else {
-  //       req = {
-  //         key: this.userData.contactInfo.email,
-  //         type: ProfileConstants.CONTACT_TYPE_EMAIL
-  //       };
-  //     }
-
-  //     this.profileService.isProfileAlreadyInUse(req).subscribe(async (success: any) => {
-  //       await this.loader.dismiss();
-  //       this.loader = undefined;
-  //       if (success && success.response) {
-  //         // if (success.response.id === this.userId) {
-  //         //   this.updateErr = true;
-  //         // } else {
-  //         //   this.err = true;
-  //         // }   
-  //       }
-  //     }, async (error) => {
-  //       if (error.response && error.response.body.params.err === 'UOS_USRRED0013' || error.response.body.params.err === 'UOS_USRRED009') {
-  //         this.generateOTP();
-  //       } else if (error.response && error.response.body.params.err === 'USER_NOT_FOUND') {
-  //         // this.blockedAccount = true;
-  //         if (this.loader) {
-  //           await this.loader.dismiss();
-  //           this.loader = undefined;
-  //         }
-  //       } else {
-  //         if (this.loader) {
-  //           await this.loader.dismiss();
-  //           this.loader = undefined;
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     this.commonUtilService.showToast('INTERNET_CONNECTIVITY_NEEDED');
-  //   }
-  // }
-
   onFormEmailPasswordChange(value: any) {
-    console.log('onFormEmailPasswordChange')
     this.errorConfirmPassword = false;
     this.userData = value;
     if (value.confirmPassword && value.confirmPassword != value.password) this.errorConfirmPassword = true;
-
-    console.log(value)
   }
   statusChanges(event) {
     this.isFormValid = event.isValid;
