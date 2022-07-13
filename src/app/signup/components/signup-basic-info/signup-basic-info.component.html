@@ -8,36 +8,34 @@
     <h5 class="subtitle">{{'REGISTER_TO' | translate:{'appName': appName} }}</h5>
   </div>
 
-  <form [formGroup]="basicInfoForm" (ngSubmit)="continue()" novalidate>
+
+  <form [formGroup]="personalInfoForm" (ngSubmit)="continue()" novalidate>
     <ion-item lines="none">
-      <ion-label position="stacked" class="important">Name</ion-label>
-      <ion-input type="text" placeholder="Enter Your Name" formControlName="name"></ion-input>
+      <ion-label position="stacked" class="important">{{'FULL_NAME' | translate}}</ion-label>
+      <ion-input type="text" placeholder="{{'ENTER_NAME' | translate}}" formControlName="name"></ion-input>
     </ion-item>
     <div class="ion-padding-start danger"
-      *ngIf="basicInfoForm.controls.name.touched && basicInfoForm.controls['name'].errors && basicInfoForm.controls['name'].errors.required">
-      Please enter name
+      *ngIf="personalInfoForm.controls.name.touched && personalInfoForm.controls['name'].errors && personalInfoForm.controls['name'].errors.required">
+      {{'NAME_VALID' | translate}}
     </div>
-    <div class="ion-padding-start danger"
-      *ngIf="basicInfoForm.controls.name.touched && basicInfoForm.controls['name'].errors && basicInfoForm.controls['name'].errors.pattern">
-      Please enter a valid name
-    </div>
+
     <ion-item lines="none">
-      <ion-label position="stacked" class="important">Year of Birth </ion-label>
+      <ion-label position="stacked" class="important">{{'YOB_TITLE' | translate}}</ion-label>
       <section>
-        <ion-datetime display-timezone="utc" placeholder="DD/MM/YYYY" formControlName="yearofbirth">
+        <ion-datetime min="{{minYear}}" max="{{maxYear}}" placeholder="{{'SELECT_YOB' | translate}}"
+          formControlName="dob" displayFormat="YYYY" pickerFormat="YYYY">
         </ion-datetime>
         <ion-icon name="calendar" slot="end"></ion-icon>
       </section>
     </ion-item>
     <div class="ion-padding-start danger"
-      *ngIf="basicInfoForm.controls.yearofbirth.touched && basicInfoForm.controls['yearofbirth'].errors && basicInfoForm.controls['yearofbirth'].errors.required">
-      Please enter year of birth
+      *ngIf="personalInfoForm.controls.dob.touched && personalInfoForm.controls['dob'].errors && personalInfoForm.controls['dob'].errors.required">
+      {{'YOB_VALID' | translate}}
     </div>
     <ion-row>
       <ion-col size-md="10">
-        <ion-button expand="block" [ngStyle]="{'background-color': btnColor}" (click)="continue()"
-          [disabled]="!basicInfoForm.valid">
-          Continue <ion-icon class="mg-popup-btn-icon" name="arrow-forward" slot="end"></ion-icon>
+        <ion-button expand="block" (click)="continue()" [disabled]="!personalInfoForm.valid">
+          {{'CONTINUE' | translate}} <ion-icon class="mg-popup-btn-icon" name="arrow-forward" slot="end"></ion-icon>
         </ion-button>
       </ion-col>
     </ion-row>

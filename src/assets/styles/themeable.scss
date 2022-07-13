@@ -2125,3 +2125,17 @@ app-signup-email-password {
     }
   }
 }
+
+app-district-mapping {
+    sb-form {
+      sb-multiple-dropdown {
+        .multi-select-container {
+          sb-caret-down,
+          sb-caret-up {
+            right: 0.125rem !important;
+            z-index: 0 !important;
+          }
+      }
+    }
+  }
+}

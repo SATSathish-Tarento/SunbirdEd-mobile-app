@@ -19,11 +19,11 @@
     }
 
     .font-size-13{
-      font-size: 0.813rem;
+        font-size: 0.813rem;
     }
-    
+
     .error-input{
-      border-bottom: 1.5px solid map-get($colors, bright_red_e7) !important;
+        border-bottom: 1.5px solid map-get($colors, bright_red_e7) !important;
     }
 
     .label {
@@ -165,8 +165,8 @@
         margin-left: 18px;
         border: 2px solid $blue;
         width: 45%;
-      }
-      .block-button-clear{
+    }
+    .block-button-clear{
         color: $blue;
         background-color: white;
         font-size: 1rem;
@@ -174,7 +174,7 @@
         border: 2px solid $blue;
         width: 45%;
         margin-left: 0.7rem;
-      }
+    }
     .arrow-icon {
         right: 0.938rem;
         top: 50%;
@@ -238,17 +238,17 @@
     padding: 1.5rem 1rem 1.5rem 1rem;
 }
 
-  .login-content {
-      text-align: center;
-      padding-top: 1rem;
-  }
+.login-content {
+    text-align: center;
+    padding-top: 1rem;
+}
 
-  label {
+label {
     display: inline-block;
     font-weight: 700;
-  }
+}
 
-  :host ::ng-deep {
+:host ::ng-deep {
     --sbt-pill-bg-active: #004594;
     --sbt-pill-text-hover: #ffffff;
     --sbt-pill-hs: 212,100%;
@@ -259,77 +259,101 @@
     --sbt-theme-purple-selectbox-lbg: #F2EEFF;
     --sbt-bradius: 0.125rem;
     --sbt-bradius-24: calc(var(--sbt-bradius) * 12);
-  
+
     .cfe-multiselect-container {
         ul, li {
             margin: 0;
             padding: 0;
             list-style: none;
-          }
-      
-      margin-bottom: 1rem;
-  
-      .cfe-multiselect-field {
-        display: flex;
-  
-        height: 2.76rem;
-        line-height: 2.5rem;
-        border-radius: var(--sbt-bradius-24) !important;
-  
-        font-weight: 700;
-        font-size: .75rem;
-        width: 100%;
-        min-height: 2rem;
-  
-        border: 1px solid gray;
-        padding: 0.188rem 1.25rem;
-        white-space: normal;
-        outline: 0;
-        min-width: 14rem;
-        box-shadow: var(--sbt-box-shadow-3px);
-        transition: box-shadow .1s ease, width .1s ease;
-  
-        -webkit-tap-highlight-color: transparent;
-        text-align: left;
-  
-        .cfe-multiselect-field-label-container {
-          height: 100%;
-          width: 100%;
-          overflow: hidden;
-  
-          order: 1;
-          flex-grow: 1;
-          border-bottom-color: transparent !important;
-  
-          ul {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-  
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            padding-left: 0 !important;
-          }
-  
-          .cfe-multiselect-field-label {
-            display: inline;
-            font-size: 0.95rem !important;
-          }
         }
-  
-        .cfe-multiselect-field-caret {
-          order: 2;
-          flex-shrink: 0;
-  
-          box-sizing: border-box;
-          padding-right: .75rem;
-          top: .3rem !important;
-        }
-      }
 
-      .sb-modal ul {
-        list-style-type: none;
-      }
+        margin-bottom: 1rem;
+
+        .cfe-multiselect-field {
+            display: flex;
+
+            height: 2.76rem;
+            line-height: 2.5rem;
+            border-radius: var(--sbt-bradius-24) !important;
+
+            font-weight: 700;
+            font-size: .75rem;
+            width: 100%;
+            min-height: 2rem;
+
+            border: 1px solid gray;
+            padding: 0.188rem 1.25rem;
+            white-space: normal;
+            outline: 0;
+            min-width: 14rem;
+            box-shadow: var(--sbt-box-shadow-3px);
+            transition: box-shadow .1s ease, width .1s ease;
+
+            -webkit-tap-highlight-color: transparent;
+            text-align: left;
+
+            .cfe-multiselect-field-label-container {
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+
+                order: 1;
+                flex-grow: 1;
+                border-bottom-color: transparent !important;
+
+                ul {
+                    height: 100%;
+                    width: 100%;
+                    overflow: hidden;
+
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    padding-left: 0 !important;
+                }
+
+                .cfe-multiselect-field-label {
+                    display: inline;
+                    font-size: 0.95rem !important;
+                }
+            }
+
+            .cfe-multiselect-field-caret {
+                order: 2;
+                flex-shrink: 0;
+
+                box-sizing: border-box;
+                padding-right: .75rem;
+                top: .3rem !important;
+            }
+        }
+
+        .sb-modal ul {
+            list-style-type: none;
+        }
     }
-  }
- 
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer {
+    background: #F8FAFC;
+    border-top: 1px solid #d1d6dd;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    padding: 1rem;
+    z-index: 1;
+
+    a {
+        color: #005A9E;
+    }
+}
+.pb4 {
+    padding-bottom: 4rem;
+}

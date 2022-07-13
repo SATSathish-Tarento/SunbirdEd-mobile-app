@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { featureIdMap } from '@app/feature-id-map';
@@ -39,6 +39,10 @@ import { ExternalIdVerificationService } from '@app/services/externalid-verifica
   styleUrls: ['./district-mapping.page.scss'],
 })
 export class DistrictMappingPage implements OnDestroy {
+  @Input() signUpData: any;
+  @Output() subformInitialized: EventEmitter<{}> = new EventEmitter<{}>();
+  @Output() triggerNext: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() triggerPrev: EventEmitter<boolean> = new EventEmitter<boolean>();
   get isShowBackButton(): boolean {
     if (window.history.state.isShowBackButton === undefined) {
       return true;
@@ -84,10 +88,19 @@ export class DistrictMappingPage implements OnDestroy {
     private externalIdVerificationService: ExternalIdVerificationService
   ) {
     this.appGlobalService.closeSigninOnboardingLoader();
-    const extrasState = this.router.getCurrentNavigation().extras.state;
+    if (this.router.getCurrentNavigation()) this.init();
+  }
+  init() {
+    const extrasState = this.signUpData ?? this.router.getCurrentNavigation().extras.state;
     this.navigateToCourse = extrasState.noOfStepsToCourseToc;
     this.isGoogleSignIn = extrasState.isGoogleSignIn;
     this.userData = this.isGoogleSignIn ? extrasState.userData : '';
+  }
+  ngOnInit() {
+    if (this.signUpData && this.signUpData.isGoogleSignIn) {
+      this.init();
+      this.formInitializer()
+    }
   }
   goBack(isNavClicked: boolean) {
     this.telemetryGeneratorService.generateBackClickedNewTelemetry(
@@ -101,6 +114,9 @@ export class DistrictMappingPage implements OnDestroy {
   }
 
   async ionViewWillEnter() {
+    this.formInitializer()
+  }
+  async formInitializer() {
     this.initializeLoader();
     this.profile = await this.profileService.getActiveSessionProfile({ requiredFields: ProfileConstants.REQUIRED_FIELDS }).toPromise();
     this.presetLocation = (await this.locationHandler.getAvailableLocation(
@@ -110,13 +126,13 @@ export class DistrictMappingPage implements OnDestroy {
         return acc;
       }, {});
     try {
-        this.initialiseFormData({
-          ...FormConstants.LOCATION_MAPPING,
-          subType: this.presetLocation['state'] ? this.presetLocation['state'].code : FormConstants.LOCATION_MAPPING.subType
-        });
-      } catch (e) {
-        this.initialiseFormData(FormConstants.LOCATION_MAPPING);
-      }
+      this.initialiseFormData({
+        ...FormConstants.LOCATION_MAPPING,
+        subType: this.presetLocation['state'] ? this.presetLocation['state'].code : FormConstants.LOCATION_MAPPING.subType
+      });
+    } catch (e) {
+      this.initialiseFormData(FormConstants.LOCATION_MAPPING);
+    }
     this.handleDeviceBackButton();
     this.checkLocationMandatory();
     this.telemetryGeneratorService.generateImpressionTelemetry(
@@ -229,15 +245,23 @@ export class DistrictMappingPage implements OnDestroy {
         profileUserTypes: userTypes
       };
       if (this.isGoogleSignIn && this.userData.isMinor) {
-          const navigationExtras: NavigationExtras = {
-            state: {
-              userData: {...this.userData,
-                location: this.formGroup.value.children['persona'],
-                profileUserTypes: userTypes,
-                userId: this.appGlobalService.getCurrentUser().uid || this.profile.uid}
-            }
-          };
-          this.router.navigate([RouterLinks.SIGNUP_EMAIL], navigationExtras);
+        this.subformInitialized.emit({
+          location: this.formGroup.value.children['persona'],
+          profileUserTypes: userTypes,
+          userId: this.appGlobalService.getCurrentUser().uid || this.profile.uid
+        })
+        this.triggerNext.emit();
+        // const navigationExtras: NavigationExtras = {
+        //   state: {
+        //     userData: {
+        //       ...this.userData,
+        //       location: this.formGroup.value.children['persona'],
+        //       profileUserTypes: userTypes,
+        //       userId: this.appGlobalService.getCurrentUser().uid || this.profile.uid
+        //     }
+        //   }
+        // };
+        // this.router.navigate([RouterLinks.SIGNUP_EMAIL], navigationExtras);
       } else {
         if (this.isGoogleSignIn) {
           req['name'] = this.userData.name;
@@ -258,10 +282,10 @@ export class DistrictMappingPage implements OnDestroy {
             this.commonUtilService.showToast('PROFILE_UPDATE_SUCCESS');
             this.events.publish('loggedInProfile:update', req);
             if (this.profile && (this.source === PageId.GUEST_PROFILE || this.source === PageId.PROFILE_NAME_CONFIRMATION_POPUP)) {
-                this.location.back();
+              this.location.back();
             } else if (this.profile && this.source === PageId.PROFILE) {
-                this.location.back();
-                this.events.publish('UPDATE_TABS', {type: 'SWITCH_TABS_USERTYPE'});
+              this.location.back();
+              this.events.publish('UPDATE_TABS', {type: 'SWITCH_TABS_USERTYPE'});
             } else {
               if (this.profile && !isSSOUser) {
                 this.appGlobalService.showYearOfBirthPopup(this.profile.serverProfile);
@@ -397,18 +421,18 @@ export class DistrictMappingPage implements OnDestroy {
       this.appGlobalService.isUserLoggedIn() ? ['SIGNEDIN_GUEST', 'SIGNEDIN'] : ['SIGNEDIN_GUEST', 'GUEST'];
     for (const config of locationMappingConfig) {
       if (config.code === 'name' && (this.source === PageId.PROFILE || this.source === PageId.PROFILE_NAME_CONFIRMATION_POPUP)
-      && !this.isGoogleSignIn) {
+        && !this.isGoogleSignIn) {
         config.templateOptions.hidden = false;
         config.default = (this.profile && this.profile.serverProfile && this.profile.serverProfile.firstName) ?
-        this.profile.serverProfile.firstName : this.profile.handle;
+          this.profile.serverProfile.firstName : this.profile.handle;
       } else if (config.code === 'name' && this.source !== PageId.PROFILE) {
         config.validations = [];
       }
       if (config.code === 'persona') {
         config.default = (this.profile && this.profile.serverProfile
-        && this.profile.serverProfile.profileUserType.type
-        && (this.profile.serverProfile.profileUserType.type !== ProfileType.OTHER.toUpperCase())) ?
-        this.profile.serverProfile.profileUserType.type : selectedUserType;
+          && this.profile.serverProfile.profileUserType.type
+          && (this.profile.serverProfile.profileUserType.type !== ProfileType.OTHER.toUpperCase())) ?
+          this.profile.serverProfile.profileUserType.type : selectedUserType;
         if (this.source === PageId.PROFILE || this.isGoogleSignIn) {
           config.templateOptions.hidden = false;
         }
@@ -615,7 +639,7 @@ export class DistrictMappingPage implements OnDestroy {
     let newLocation;
     Object.keys(curr['children']['persona']).forEach((key) => {
       if (curr['children']['persona'][key] && (!prev['children']['persona'][key] ||
-       (curr['children']['persona'][key].code !== prev['children']['persona'][key].code))) {
+        (curr['children']['persona'][key].code !== prev['children']['persona'][key].code))) {
         newLocation = curr['children']['persona'][key];
       }
     });
@@ -625,8 +649,8 @@ export class DistrictMappingPage implements OnDestroy {
   generateTelemetryForCategoryClicked(location) {
     const correlationList: Array<CorrelationData> = [];
     correlationList.push({
-    id: location.name,
-    type: location.type.charAt(0).toUpperCase() + location.type.slice(1)
+      id: location.name,
+      type: location.type.charAt(0).toUpperCase() + location.type.slice(1)
     });
     this.telemetryGeneratorService.generateInteractTelemetry(
       InteractType.SELECT_CATEGORY, '',
@@ -643,10 +667,10 @@ export class DistrictMappingPage implements OnDestroy {
     let changeStatus;
     locationCodes.forEach((d) => {
       if (!changeStatus && d.type === 'state' && this.presetLocation['state']
-      && (d.code !== this.presetLocation['state'].code)) {
+        && (d.code !== this.presetLocation['state'].code)) {
         changeStatus = InteractSubtype.STATE_DIST_CHANGED;
       } else if (!changeStatus && d.type === 'district' && this.presetLocation['district']
-      && (d.code !== this.presetLocation['district'].code)) {
+        && (d.code !== this.presetLocation['district'].code)) {
         changeStatus = InteractSubtype.DIST_CHANGED;
       }
     });
@@ -668,5 +692,8 @@ export class DistrictMappingPage implements OnDestroy {
 
   redirectToLogin() {
     this.router.navigate([RouterLinks.SIGN_IN]);
+  }
+  back() {
+    this.triggerPrev.emit();
   }
 }

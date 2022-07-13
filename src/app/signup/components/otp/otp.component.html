@@ -2,38 +2,39 @@
   <table>
     <tr>
       <td>{{'NAME' | translate }}</td>
-      <td>Hrishikesh S Bothe</td>
+      <td>{{userData?.basicInfo?.name}}</td>
     </tr>
     <tr>
       <td>{{'YOB_TITLE' | translate}}</td>
-      <td>2015</td>
+      <td>{{userData?.basicInfo?.dob}}</td>
     </tr>
+
     <tr>
       <td>{{'STATE' | translate}}</td>
-      <td>Karnataka</td>
+      <td>{{userData?.onboardInfo?.location?.state?.name}}</td>
     </tr>
     <tr>
       <td>{{'DISTRICT' | translate}}</td>
-      <td>Belagavi</td>
+      <td>{{userData?.onboardInfo?.location?.district?.name}}</td>
     </tr>
     <tr>
       <td>{{'FRMELEMNTS_LBL_SCHOOL' | translate}}</td>
-      <td>Balmohan Vidya Mandir</td>
+      <td>{{userData?.onboardInfo?.location?.school?.name}}</td>
     </tr>
     <tr>
       <td>{{'FRMELEMNTS_LBL_BLOCK' | translate}}</td>
-      <td></td>
+      <td>{{userData?.onboardInfo?.location?.block?.name}}</td>
     </tr>
     <tr>
       <td>{{'FRMELEMNTS_LBL_CLUSTER' | translate}}</td>
-      <td></td>
+      <td>{{userData?.onboardInfo?.location?.cluster?.name}}</td>
     </tr>
   </table>
 </div>
 <div class="center">
-  <h5>OTP is sent to ******8902</h5>
-  <span>it is valid for 30 minutes</span>
-  <p>Parent/Guardian should enter the OTP</p>
+  <h5>{{'OTP_SENT_TO' | translate:{'contactNumber': contactNumber} }}</h5>
+  <span>{{'OTP_VALID_FOR' | translate}}</span>
+  <p>{{'OTP_PARENT_GUARDIAN' | translate}}</p>
 </div>
 
 <form [formGroup]="otpInfoForm" (ngSubmit)="continue()">
@@ -43,21 +44,20 @@
   </ion-item>
   <div class="ion-padding-start danger"
     *ngIf="otpInfoForm.controls.otp.touched && otpInfoForm.controls['otp'].errors && otpInfoForm.controls['otp'].errors.required">
-    Please enter OTP
+    {{'OTP_VALIDATION' | translate}}
   </div>
   <ion-item lines="none">
-    <ion-checkbox slot="start" name="agreement"></ion-checkbox>
+    <ion-checkbox slot="start" name="agreement" (ionChange)="changeEvent($event)"></ion-checkbox>
     <ion-text class="accepttext">As a parent/guardian I understand & <a href="#">Accept the DIKSHA Terms of Use</a> and
-      agree my child to register on DIKSHA with the given information.
-    </ion-text>
+      agree my child to register on DIKSHA with the given information.</ion-text>
   </ion-item>
   <ion-row class="ion-justify-content-end prb-3">
     <ion-col size="6" class="flex">
       <ion-button (click)="back()" color="light" shape="round">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
-      <ion-button expand="block" [ngStyle]="{'background-color':btnColor}" (click)="continue()">
-        {{'FRMELEMNTS_LBL_CONTINUE' | translate}} <ion-icon class="mg-popup-btn-icon" name="arrow-forward" slot="end">
+      <ion-button expand="block" (click)="continue()" [disabled]="!otpInfoForm.value.otp || !acceptAgreement">
+        {{'CONTINUE' | translate}} <ion-icon class="mg-popup-btn-icon" name="arrow-forward" slot="end">
         </ion-icon>
       </ion-button>
     </ion-col>

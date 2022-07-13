@@ -1,8 +1,8 @@
 <ion-content>
   <div class="dm-header ion-padding" [ngClass]="{'dm-header-new': !isShowBackButton}">
     <span role="button" aria-label="back"><ion-icon *ngIf="isShowBackButton" name="arrow-back" role="button" aria-label="back" (click)="goBack(true)"
-      class="top-back-button"></ion-icon></span>
-      <span class="preference-info" role="heading" aria-level="1">{{ 'SET_PREFERENCE' | translate }}</span>
+        class="top-back-button"></ion-icon></span>
+    <span class="preference-info" role="heading" aria-level="1">{{ 'SET_PREFERENCE' | translate }}</span>
     <button class="pull-right sb-btn-sm sb-btn-outline-info" (click)="skipLocation()"
       *ngIf="showNotNowFlag">{{'NOT_NOW'| translate}}</button>
   </div>
@@ -13,46 +13,61 @@
 
   <div class="login-header" *ngIf="isGoogleSignIn">
     To discover relevant content update the following details:
-</div>
+  </div>
 
   <div class="px-16">
-    <sb-form *ngIf="locationFormConfig && locationFormConfig.length"
-             [platform]="'mobile'"
-             [config]="locationFormConfig"
-             (initialize)="onFormInitialize($event)"
-             (valueChanges)="onFormValueChange($event)"
-             (dataLoadStatus)="onDataLoadStatusChange($event)">
+    <sb-form *ngIf="locationFormConfig && locationFormConfig.length" 
+              [platform]="'mobile'" 
+              [config]="locationFormConfig"
+              (initialize)="onFormInitialize($event)" 
+              (valueChanges)="onFormValueChange($event)"
+      (dataLoadStatus)="onDataLoadStatusChange($event)">
     </sb-form>
   </div>
-  <div class="login-content" *ngIf="isGoogleSignIn">
+  <!-- <div class="login-content" *ngIf="isGoogleSignIn">
     <label>Already have an account?</label>
     <button class="login-info sb-btn sb-btn-normal sb-btn-outline-primary text-uppercase"
       aria-label="Already have an account? Login here" tabindex="0" (click)="redirectToLogin()"
       type="submit">Login</button>
+  </div> -->
+  <div *ngIf="isGoogleSignIn">
+    <ion-row class="ion-justify-content-end pb4">
+      <ion-col size="8" class="flex">
+        <ion-button (click)="back()" color="light" shape="round">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <ion-button expand="block" [ngStyle]="{'background-color': btnColor}" (click)="submit()"
+          [disabled]="formGroup?.invalid">
+          {{'CONTINUE' | translate}} <ion-icon class="mg-popup-btn-icon" name="arrow-forward" slot="end"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <div class="footer">
+      <label>{{'HAVE_ACCOUNT' | translate }}</label>
+      <button class="login-info sb-btn sb-btn-normal sb-btn-outline-primary text-uppercase"
+        aria-label="Already have an account? Login here" tabindex="0" (click)="gotoLogin()" type="submit">{{'SIGN_IN'
+        | translate}}</button>
+    </div>
   </div>
-  <div class="bottom-section"></div>
-  <div class="ios-footer" *ngIf="platform.is('ios')">
+  <div class="bottom-section" *ngIf="!isGoogleSignIn"></div>
+  <div class="ios-footer" *ngIf="platform.is('ios')  && !isGoogleSignIn">
     <div class="btn-info" *ngIf="locationFormConfig && locationFormConfig.length">
-      <button class="block-button-clear"
-              [ngClass]="{'blur-clear-btn': formGroup?.invalid}" [disabled]="formGroup?.invalid"
-              (click)="clearUserLocationSelections()">{{'CLEAR' | translate}}
+      <button class="block-button-clear" [ngClass]="{'blur-clear-btn': formGroup?.invalid}"
+        [disabled]="formGroup?.invalid" (click)="clearUserLocationSelections()">{{'CLEAR' | translate}}
       </button>
-      <button class="block-button-save"
-              [ngClass]="{'blur-save-btn': formGroup?.invalid}" [disabled]="formGroup?.invalid"
-              (click)="submit()">{{'BTN_SUBMIT' | translate}}
+      <button class="block-button-save" [ngClass]="{'blur-save-btn': formGroup?.invalid}"
+        [disabled]="formGroup?.invalid" (click)="submit()">{{'BTN_SUBMIT' | translate}}
       </button>
     </div>
   </div>
 </ion-content>
-<div class="footer" *ngIf="platform.is('android')">
+<div class="footer" *ngIf="platform.is('android') && !isGoogleSignIn">
   <div class="btn-info" *ngIf="locationFormConfig && locationFormConfig.length">
-    <button class="block-button-clear"
-            [ngClass]="{'blur-clear-btn': formGroup?.invalid}" [disabled]="formGroup?.invalid"
-            (click)="clearUserLocationSelections()">{{'CLEAR' | translate}}
+    <button class="block-button-clear" [ngClass]="{'blur-clear-btn': formGroup?.invalid}"
+      [disabled]="formGroup?.invalid" (click)="clearUserLocationSelections()">{{'CLEAR' | translate}}
     </button>
-    <button class="block-button-save"
-            [ngClass]="{'blur-save-btn': formGroup?.invalid}" [disabled]="formGroup?.invalid"
-            (click)="submit()">{{'BTN_SUBMIT' | translate}}
+    <button class="block-button-save" [ngClass]="{'blur-save-btn': formGroup?.invalid}" [disabled]="formGroup?.invalid"
+      (click)="submit()">{{'BTN_SUBMIT' | translate}}
     </button>
   </div>
 </div>

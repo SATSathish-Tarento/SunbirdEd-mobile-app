@@ -31,6 +31,7 @@ const routes: Routes = [
 
   ],
   declarations: [DistrictMappingPage],
-  providers: [LocationHandler, ProfileHandler]
+  providers: [LocationHandler, ProfileHandler],
+  exports: [DistrictMappingPage]
 })
 export class DistrictMappingPageModule {}

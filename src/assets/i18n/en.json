@@ -1319,6 +1319,7 @@
   "FRMELEMNTS_LBL_DISCARD_EDIT_PROJECT": "Save changes",
   "FRMELEMNTS_MSG_DISCARD_EDIT_PROJECT": "Would you like to save the changes you have made before you exit the page?",
   "FRMELEMNTS_MSG_CERTIFICATE_CRITERIA_BFR_SUBMITTING": "Please ensure you have met the certificate criteria for this improvement project before submitting.",
+  "OTP":"One Time Password",
   "OTP_SENT_TO": "OTP is sent to {{contactNumber}}",
   "OTP_VALID_FOR": "it is valid for 30 minutes",
   "OTP_PARENT_GUARDIAN": "Parent/Guardian should enter the OTP",
@@ -1329,5 +1330,7 @@
   "ENTER_NAME": "Enter your name",
   "MOBILE_OR_EMAIL": "Enter mobile number or email address of your parent or guardian*",
   "OTP_SENT": "An OTP will be sent to verify mobile number or email address",
-  "PASSWORD_MATCH": "Passwords must match"
+  "PASSWORD_MATCH": "Passwords must match",
+  "NAME_VALID":"Please enter name",
+  "YOB_VALID":"Please enter year of birth"
 }
